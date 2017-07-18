@@ -52,6 +52,8 @@ public class HttpModel {
 
     public void doHttpRequestUserPhotos(String userId)
     {
+        Log.v("TAG","ID = "+userId);
+
         //call data through internet
         FlickerAPIInterface flickerAPIInterface = RetrofitClient.getRetrofit().create(FlickerAPIInterface.class);
         Call<Result> connection = flickerAPIInterface.listUserPhotos(userId);
@@ -64,7 +66,7 @@ public class HttpModel {
                 if(result!=null)
                 {
                     controller.updateView(result);
-                    Log.v("TAG", response.body().getPhotos().getPhotoList().get(0).getTitle());
+                    Log.v("TAG", result.getPhotos().getPhotoList().size()+"");
                 }
 
             }

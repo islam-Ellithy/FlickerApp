@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements IView{
             photoArrayList = new ArrayList<>();
         }
 
-        mAdapter = new ResultAdapter(photoArrayList,getBaseContext(),true);
+        mAdapter = new ResultAdapter(photoArrayList,getApplicationContext(),true);
         recyclerView.setAdapter(mAdapter);
 
         request();

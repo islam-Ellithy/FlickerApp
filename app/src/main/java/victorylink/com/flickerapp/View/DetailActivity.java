@@ -30,8 +30,9 @@ public class DetailActivity extends AppCompatActivity implements IView {
         setSupportActionBar(toolbar);
 
         result = new Result();
-        recyclerView = (RecyclerView) findViewById(R.id.image_items);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -40,19 +41,19 @@ public class DetailActivity extends AppCompatActivity implements IView {
             photoArrayList = new ArrayList<>();
         }
 
+
         mAdapter = new ResultAdapter(photoArrayList, this, false);
         recyclerView.setAdapter(mAdapter);
 
         HttpController resultController = new HttpController(this);
-
         String userId = getIntent().getStringExtra("userId");
 
         resultController.doHttpRequestUserPhotos(userId);
     }
 
     @Override
-    public void updateUI(Result Result) {
-        assignResultToUI(result);
+    public void updateUI(Result result) {
+        this.assignResultToUI(result);
     }
 
     public void assignResultToUI(Result result) {
