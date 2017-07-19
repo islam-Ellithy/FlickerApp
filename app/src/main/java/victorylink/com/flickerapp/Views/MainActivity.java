@@ -24,18 +24,25 @@ public class MainActivity extends AppCompatActivity implements IView {
 
     private RecyclerView recyclerView;
     private PhotoAdapter mAdapter;
-/*
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    private Result resultJson ;
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("result",resultJson);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+
+        resultJson = savedInstanceState.getParcelable("result");
+        
+        if (resultJson == null) {
+            request();
+        }
     }
-*/
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +53,10 @@ public class MainActivity extends AppCompatActivity implements IView {
 
         initView();
 
-        request();
+        if (resultJson == null) {
+            request();
+        }
+
 
     }
 
@@ -60,13 +70,16 @@ public class MainActivity extends AppCompatActivity implements IView {
 
     public void request() {
         HttpController resultController = new HttpController(this);
-
         resultController.doHttpRequest();
     }
 
     public void assignResultToUI(Result result) {
 
         Log.v("TAG", result.getPhotos().getPhotoList().size() + "");
+
+
+        resultJson = result ;
+
         ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
 
         if (mAdapter == null) {
