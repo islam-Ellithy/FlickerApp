@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements IView {
         super.onRestoreInstanceState(savedInstanceState);
 
         resultJson = savedInstanceState.getParcelable("result");
-        
+
         if (resultJson == null) {
             request();
         }
