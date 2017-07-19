@@ -2,47 +2,47 @@
 
 That app is implemented by MVC pattern so you will find the app is divided into three folders as following :
 
-1-Model
+### 1-Model
 
-EssentialResources
-
-
-FlickerAPIInterface
+* EssentialResources
 
 
-HttpModel
+* FlickerAPIInterface
 
 
-IView
+* HttpModel
 
 
-Photo
+* IView
 
 
-Photos
+* Photo
 
 
-Result
+* Photos
 
 
-RetrofitClient
+* Result
 
 
-2-View
-
-DetailActivity
+* RetrofitClient
 
 
-MainActivity
+### 2-View
+
+* DetailActivity
 
 
-PhotoAdapter
+* MainActivity
 
 
-3-Control
+* PhotoAdapter
 
 
-HttpController
+### 3-Control
+
+
+* HttpController
 
 
 
