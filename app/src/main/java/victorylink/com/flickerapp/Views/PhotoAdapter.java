@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.View;
+package victorylink.com.flickerapp.Views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +19,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import victorylink.com.flickerapp.Model.Constants;
-import victorylink.com.flickerapp.Parser.Photo;
+import victorylink.com.flickerapp.Models.Constants;
+import victorylink.com.flickerapp.Parsers.Photo;
 import victorylink.com.flickerapp.R;
 
 /**

@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.Model;
+package victorylink.com.flickerapp.Models;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

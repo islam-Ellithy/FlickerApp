@@ -1,4 +1,6 @@
-package victorylink.com.flickerapp.Model;
+package victorylink.com.flickerapp.Interfaces;
+
+import victorylink.com.flickerapp.Parsers.Result;
 
 /**
  * Created by MrHacker on 7/18/2017.

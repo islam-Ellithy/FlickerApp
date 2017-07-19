@@ -1,6 +1,6 @@
-package victorylink.com.flickerapp.Model;
+package victorylink.com.flickerapp.Models;
 
-import victorylink.com.flickerapp.Parser.Photo;
+import victorylink.com.flickerapp.Parsers.Photo;
 
 import static victorylink.com.flickerapp.BuildConfig.FLICKER_API_KEY;
 

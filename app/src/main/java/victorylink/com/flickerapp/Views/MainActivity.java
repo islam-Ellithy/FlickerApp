@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.View;
+package victorylink.com.flickerapp.Views;
 
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -14,16 +14,16 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
-import victorylink.com.flickerapp.Controller.HttpController;
+import victorylink.com.flickerapp.Controllers.HttpController;
 import victorylink.com.flickerapp.Interfaces.IView;
-import victorylink.com.flickerapp.Parser.Photo;
-import victorylink.com.flickerapp.Parser.Result;
+import victorylink.com.flickerapp.Parsers.Photo;
+import victorylink.com.flickerapp.Parsers.Result;
 import victorylink.com.flickerapp.R;
 
-public class MainActivity extends AppCompatActivity implements IView{
+public class MainActivity extends AppCompatActivity implements IView {
 
-    private  RecyclerView recyclerView ;
-    private PhotoAdapter mAdapter ;
+    private RecyclerView recyclerView;
+    private PhotoAdapter mAdapter;
 /*
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity implements IView{
     }
 
 
-    public void initView()
-    {
+    public void initView() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -67,13 +66,12 @@ public class MainActivity extends AppCompatActivity implements IView{
 
     public void assignResultToUI(Result result) {
 
-        Log.v("TAG",result.getPhotos().getPhotoList().size()+"");
+        Log.v("TAG", result.getPhotos().getPhotoList().size() + "");
         ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
 
-        if(mAdapter==null)
-        {
-           mAdapter = new PhotoAdapter(photoArrayList,this,true);
-           recyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new PhotoAdapter(photoArrayList, this, true);
+            recyclerView.setAdapter(mAdapter);
         }
 
         mAdapter.swapArray(photoArrayList);
@@ -111,13 +109,7 @@ public class MainActivity extends AppCompatActivity implements IView{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
 
         return super.onOptionsItemSelected(item);
     }

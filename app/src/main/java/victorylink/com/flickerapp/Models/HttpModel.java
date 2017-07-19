@@ -1,11 +1,11 @@
-package victorylink.com.flickerapp.Model;
+package victorylink.com.flickerapp.Models;
 import android.util.Log;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import victorylink.com.flickerapp.Controller.HttpController;
+import victorylink.com.flickerapp.Controllers.HttpController;
 import victorylink.com.flickerapp.Interfaces.FlickerAPIInterface;
-import victorylink.com.flickerapp.Parser.Result;
+import victorylink.com.flickerapp.Parsers.Result;
 
 /**
  * Created by MrHacker on 7/17/2017.

@@ -1,18 +1,20 @@
-package victorylink.com.flickerapp.Model;
+package victorylink.com.flickerapp.Interfaces;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import victorylink.com.flickerapp.Models.Constants;
+import victorylink.com.flickerapp.Parsers.Result;
 
 /**
  * Created by MrHacker on 7/18/2017.
  */
 
 public interface FlickerAPIInterface {
-    @GET(EssentialResources.RecentPhotosURL)
+    @GET(Constants.RECENT_PHOTOS_URL)
     Call<Result> listRecentPhotos();
 
-    @GET(EssentialResources.UserPhotosURL)
+    @GET(Constants.USER_PHOTOS_URL)
     Call<Result> listUserPhotos(@Query("user_id")String userId);
 
 }

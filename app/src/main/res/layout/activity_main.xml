@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="victorylink.com.flickerapp.View.MainActivity">
+    tools:context="victorylink.com.flickerapp.Views.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -23,6 +23,6 @@
 
 
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_main_layout" />
 
 </LinearLayout>
