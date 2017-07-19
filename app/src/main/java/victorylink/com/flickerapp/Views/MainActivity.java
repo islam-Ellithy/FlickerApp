@@ -15,72 +15,75 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 import victorylink.com.flickerapp.Controller.HttpController;
-import victorylink.com.flickerapp.Model.IView;
-import victorylink.com.flickerapp.Model.Photo;
-import victorylink.com.flickerapp.Model.Result;
+import victorylink.com.flickerapp.Interfaces.IView;
+import victorylink.com.flickerapp.Parser.Photo;
+import victorylink.com.flickerapp.Parser.Result;
 import victorylink.com.flickerapp.R;
 
-public class DetailActivity extends AppCompatActivity implements IView {
+public class MainActivity extends AppCompatActivity implements IView{
 
-    private RecyclerView recyclerView;
-    private PhotoAdapter mAdapter;
-    private Result result;
+    private  RecyclerView recyclerView ;
+    private PhotoAdapter mAdapter ;
+/*
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String userId = getIntent().getStringExtra("userId");
-
         initView();
 
-        request(userId);
+        request();
+
     }
 
-    public void request(String userId) {
-        HttpController resultController = new HttpController(this);
-        resultController.doHttpRequestUserPhotos(userId);
-    }
 
-    public void initView() {
+    public void initView()
+    {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
+    public void request() {
+        HttpController resultController = new HttpController(this);
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
-    @Override
-    public void updateUI(Result result) {
-        this.assignResultToUI(result);
+        resultController.doHttpRequest();
     }
 
     public void assignResultToUI(Result result) {
-        //Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_SHORT).show();
-        Log.v("TAG", result.getPhotos().getPhotoList().size() + "");
+
+        Log.v("TAG",result.getPhotos().getPhotoList().size()+"");
         ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
 
-        if (mAdapter == null) {
-            mAdapter = new PhotoAdapter(photoArrayList, this, false);
-            recyclerView.setAdapter(mAdapter);
+        if(mAdapter==null)
+        {
+           mAdapter = new PhotoAdapter(photoArrayList,this,true);
+           recyclerView.setAdapter(mAdapter);
         }
 
-        mAdapter.setDataset(photoArrayList);
+        mAdapter.swapArray(photoArrayList);
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem search = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
@@ -106,5 +109,21 @@ public class DetailActivity extends AppCompatActivity implements IView {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
+        //noinspection SimplifiableIfStatement
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void updateUI(Result Result) {
+        assignResultToUI(Result);
+    }
 }

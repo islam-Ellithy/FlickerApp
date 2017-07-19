@@ -1,4 +1,7 @@
-package victorylink.com.flickerapp.Model;
+package victorylink.com.flickerapp.Parser;
+
+import android.os.Parcel;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +14,11 @@ public class Result {
     @SerializedName("stat")
     @Expose
     private String stat;
+
+    protected Result(Parcel in) {
+        stat = in.readString();
+    }
+
 
     public Photos getPhotos() {
         return photos;
@@ -29,6 +37,6 @@ public class Result {
     }
 
     public Result() {
-        photos = new Photos();
     }
+
 }

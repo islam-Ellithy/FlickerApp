@@ -13,12 +13,14 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import victorylink.com.flickerapp.Model.Photo;
+import victorylink.com.flickerapp.Model.Constants;
+import victorylink.com.flickerapp.Parser.Photo;
 import victorylink.com.flickerapp.R;
 
 /**
@@ -34,44 +36,48 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
     public PhotoAdapter(ArrayList<Photo> newDataset, Context newContext, boolean isMain) {
         dataset = newDataset;
-        filteredList = newDataset ;
+        filteredList = newDataset;
         context = newContext;
         this.isMain = isMain;
     }
 
     @Override
     public PhotoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recyclerview_layout, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        final Photo photoItem = filteredList.get(position);
 
         if (!isMain) {
-              holder.forward.setVisibility(View.GONE);
+            holder.forward.setVisibility(View.GONE);
+            holder.getTitle().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, ""+photoItem.getTitle(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
-        final Photo photoItem = filteredList.get(position);
-        Picasso.with(context).load("http://farm" + photoItem.getFarm() + ".staticflickr.com/" + photoItem.getServer() + "/" + photoItem.getId() + "_" + photoItem.getSecret() + ".jpg").into(holder.getPhoto());
+        Picasso.with(context).load(Constants.getPhotoUrl(photoItem)).into(holder.getPhoto());
         holder.getTitle().setText(photoItem.getTitle());
 
         holder.forward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                intent.putExtra("userId",photoItem.getOwner());
+                intent.putExtra("userId", photoItem.getOwner());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
     }
 
-    public void setDataset(ArrayList<Photo> dataset) {
-
-
-        this.dataset = dataset ;
-        this.filteredList = dataset ;
+    public void swapArray(ArrayList<Photo> dataArray) {
+        this.dataset = dataArray;
+        this.filteredList = dataArray;
 
         Log.v("TAG", "size on set = " + this.dataset.size() + "");
 
@@ -110,7 +116,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 }
 
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = filteredList ;
+                filterResults.values = filteredList;
                 return filterResults;
             }
 
@@ -139,28 +145,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             forward = (Button) itemView.findViewById(R.id.forward_btn);
         }
 
-        public Button getForward() {
-            return forward;
-        }
-
-        public void setForward(Button forward) {
-            this.forward = forward;
-        }
-
         public ImageView getPhoto() {
             return photo;
         }
 
-        public void setPhoto(ImageView photo) {
-            this.photo = photo;
-        }
-
         public TextView getTitle() {
             return title;
-        }
-
-        public void setTitle(TextView title) {
-            this.title = title;
         }
     }
 }

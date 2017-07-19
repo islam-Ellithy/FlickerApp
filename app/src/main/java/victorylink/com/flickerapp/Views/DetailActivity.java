@@ -15,62 +15,71 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 import victorylink.com.flickerapp.Controller.HttpController;
-import victorylink.com.flickerapp.Model.IView;
-import victorylink.com.flickerapp.Model.Photo;
-import victorylink.com.flickerapp.Model.Result;
+import victorylink.com.flickerapp.Interfaces.IView;
+import victorylink.com.flickerapp.Parser.Photo;
+import victorylink.com.flickerapp.Parser.Result;
 import victorylink.com.flickerapp.R;
 
-public class MainActivity extends AppCompatActivity implements IView{
+public class DetailActivity extends AppCompatActivity implements IView {
 
-    private  RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private PhotoAdapter mAdapter;
-    private Result result ;
-    private static RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        String userId = getIntent().getStringExtra("userId");
+
+        toolbar.setTitle("Photo List");
+
         setSupportActionBar(toolbar);
-        result = new Result();
+
 
         initView();
 
-        request();
-
+        request(userId);
     }
 
+    public void request(String userId) {
+        HttpController resultController = new HttpController(this);
+        resultController.doHttpRequestUserPhotos(userId);
+    }
 
-    public void initView()
-    {
-        recyclerView = (RecyclerView) findViewById(R.id.image_items);
+    public void initView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    public void request() {
-        HttpController resultController = new HttpController(this);
 
-        resultController.doHttpRequest();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public void updateUI(Result result) {
+        this.assignResultToUI(result);
     }
 
     public void assignResultToUI(Result result) {
-
-        Log.v("TAG",result.getPhotos().getPhotoList().size()+"");
+        //Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_SHORT).show();
+        Log.v("TAG", result.getPhotos().getPhotoList().size() + "");
         ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
 
-        if(mAdapter==null)
-        {
-           mAdapter = new PhotoAdapter(photoArrayList,this,true);
-           recyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new PhotoAdapter(photoArrayList, this, false);
+            recyclerView.setAdapter(mAdapter);
         }
 
-        mAdapter.setDataset(photoArrayList);
+        mAdapter.swapArray(photoArrayList);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,21 +109,5 @@ public class MainActivity extends AppCompatActivity implements IView{
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void updateUI(Result Result) {
-        assignResultToUI(Result);
-    }
 }
