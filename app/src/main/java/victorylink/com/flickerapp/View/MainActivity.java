@@ -1,9 +1,12 @@
 package victorylink.com.flickerapp.View;
+
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +23,7 @@ import victorylink.com.flickerapp.R;
 public class MainActivity extends AppCompatActivity implements IView{
 
     private  RecyclerView recyclerView;
-    private  ResultAdapter mAdapter;
+    private PhotoAdapter mAdapter;
     private Result result ;
     private static RecyclerView.LayoutManager mLayoutManager;
 
@@ -31,26 +34,21 @@ public class MainActivity extends AppCompatActivity implements IView{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         result = new Result();
-        recyclerView = (RecyclerView) findViewById(R.id.image_items);
 
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
-        if(photoArrayList==null)
-        {
-            photoArrayList = new ArrayList<>();
-        }
-
-        mAdapter = new ResultAdapter(photoArrayList,getApplicationContext(),true);
-        recyclerView.setAdapter(mAdapter);
+        initView();
 
         request();
 
     }
 
+
+    public void initView()
+    {
+        recyclerView = (RecyclerView) findViewById(R.id.image_items);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
 
     public void request() {
         HttpController resultController = new HttpController(this);
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements IView{
 
         if(mAdapter==null)
         {
-           mAdapter = new ResultAdapter(photoArrayList,this,true);
+           mAdapter = new PhotoAdapter(photoArrayList,this,true);
            recyclerView.setAdapter(mAdapter);
         }
 
@@ -78,7 +76,28 @@ public class MainActivity extends AppCompatActivity implements IView{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem search = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        search(searchView);
         return true;
+    }
+
+    private void search(SearchView searchView) {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                mAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -89,9 +108,7 @@ public class MainActivity extends AppCompatActivity implements IView{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

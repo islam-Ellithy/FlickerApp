@@ -1,12 +1,16 @@
 package victorylink.com.flickerapp.View;
 
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -19,7 +23,7 @@ import victorylink.com.flickerapp.R;
 public class DetailActivity extends AppCompatActivity implements IView {
 
     private RecyclerView recyclerView;
-    private ResultAdapter mAdapter;
+    private PhotoAdapter mAdapter;
     private Result result;
 
     @Override
@@ -29,26 +33,30 @@ public class DetailActivity extends AppCompatActivity implements IView {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        result = new Result();
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
-        if (photoArrayList == null) {
-            photoArrayList = new ArrayList<>();
-        }
-
-
-        mAdapter = new ResultAdapter(photoArrayList, this, false);
-        recyclerView.setAdapter(mAdapter);
-
-        HttpController resultController = new HttpController(this);
         String userId = getIntent().getStringExtra("userId");
 
+        initView();
+
+        request(userId);
+    }
+
+    public void request(String userId) {
+        HttpController resultController = new HttpController(this);
         resultController.doHttpRequestUserPhotos(userId);
+    }
+
+    public void initView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override
@@ -57,18 +65,46 @@ public class DetailActivity extends AppCompatActivity implements IView {
     }
 
     public void assignResultToUI(Result result) {
-        // specify an adapter
         //Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_SHORT).show();
         Log.v("TAG", result.getPhotos().getPhotoList().size() + "");
         ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
 
         if (mAdapter == null) {
-            mAdapter = new ResultAdapter(photoArrayList, this, false);
+            mAdapter = new PhotoAdapter(photoArrayList, this, false);
             recyclerView.setAdapter(mAdapter);
         }
 
         mAdapter.setDataset(photoArrayList);
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem search = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        search(searchView);
+        return true;
+    }
+
+    private void search(SearchView searchView) {
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                mAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
+
 
 }

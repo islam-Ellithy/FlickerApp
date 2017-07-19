@@ -9,9 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,19 +25,22 @@ import victorylink.com.flickerapp.R;
  * Created by MrHacker on 7/17/2017.
  */
 
-public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
+public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> implements Filterable {
     private ArrayList<Photo> dataset;
+    private ArrayList<Photo> filteredList;
+
     private Context context = null;
     private boolean isMain;
 
-    public ResultAdapter(ArrayList<Photo> newDataset, Context newContext, boolean isMain) {
+    public PhotoAdapter(ArrayList<Photo> newDataset, Context newContext, boolean isMain) {
         dataset = newDataset;
+        filteredList = newDataset ;
         context = newContext;
         this.isMain = isMain;
     }
 
     @Override
-    public ResultAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PhotoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         return new ViewHolder(v);
     }
@@ -48,7 +52,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
               holder.forward.setVisibility(View.GONE);
         }
 
-        final Photo photoItem = dataset.get(position);
+        final Photo photoItem = filteredList.get(position);
         Picasso.with(context).load("http://farm" + photoItem.getFarm() + ".staticflickr.com/" + photoItem.getServer() + "/" + photoItem.getId() + "_" + photoItem.getSecret() + ".jpg").into(holder.getPhoto());
         holder.getTitle().setText(photoItem.getTitle());
 
@@ -56,9 +60,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                intent.putExtra("userId","58554451@N00");
+                intent.putExtra("userId",photoItem.getOwner());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Toast.makeText(context, "You clicked on " + context, Toast.LENGTH_SHORT).show();
                 context.startActivity(intent);
             }
         });
@@ -66,7 +69,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     public void setDataset(ArrayList<Photo> dataset) {
 
-        this.dataset.addAll(dataset);
+
+        this.dataset = dataset ;
+        this.filteredList = dataset ;
 
         Log.v("TAG", "size on set = " + this.dataset.size() + "");
 
@@ -75,7 +80,46 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return filteredList.size();
+    }
+
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                String charString = charSequence.toString();
+
+                if (charString.isEmpty()) {
+
+                    filteredList = dataset;
+                } else {
+
+                    ArrayList<Photo> mFilteredList = new ArrayList<>();
+
+                    for (Photo item : dataset) {
+
+                        if (item.getTitle().toLowerCase().contains(charString)) {
+                            mFilteredList.add(item);
+                        }
+                    }
+
+                    filteredList = mFilteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredList ;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                filteredList = (ArrayList<Photo>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
