@@ -2,6 +2,7 @@ package victorylink.com.flickerapp.Views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,17 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import victorylink.com.flickerapp.Models.Constants;
+import victorylink.com.flickerapp.Models.data.PhotoRecord;
+import victorylink.com.flickerapp.Models.data.FavoritePhotosDbHelper;
 import victorylink.com.flickerapp.Parsers.Photo;
 import victorylink.com.flickerapp.R;
 
@@ -30,7 +36,8 @@ import victorylink.com.flickerapp.R;
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> implements Filterable {
     private ArrayList<Photo> dataset;
     private ArrayList<Photo> filteredList;
-
+    private HashMap<String, PhotoRecord> favoriteMap;
+    FavoritePhotosDbHelper database;
     private Context context = null;
     private boolean isMain;
 
@@ -39,7 +46,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         filteredList = newDataset;
         context = newContext;
         this.isMain = isMain;
+        database = new FavoritePhotosDbHelper(context);
+        favoriteMap = database.getAllFavoritePhotos("Islam");
+        if(favoriteMap==null)
+        {
+            favoriteMap = new HashMap<>();
+        }
     }
+
 
     @Override
     public PhotoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,16 +61,44 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         return new ViewHolder(v);
     }
 
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final Photo photoItem = filteredList.get(position);
+
+        favoriteMap = database.getAllFavoritePhotos("Islam");
+
+        if (favoriteMap.containsKey(photoItem.getId())) {
+            holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
+        }
+
 
         if (!isMain) {
             holder.forward.setVisibility(View.GONE);
-            holder.getTitle().setOnClickListener(new View.OnClickListener() {
+            holder.favorite.setVisibility(View.VISIBLE);
+
+            holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.off));
+                        if (database.checkIsDataAlreadyInDBorNot(photoItem.getId())) {
+                            database.deleteFavoritePhoto(photoItem.getId());
+                            favoriteMap.remove(photoItem.getId());
+                        }
+                    } else {
+                        PhotoRecord favoriteItem = PhotoRecord.setFavoritePhoto(photoItem, "Islam");
+                        if (database.addFavoritePhoto(favoriteItem)) {
+                            holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
+                            favoriteMap.put(photoItem.getId(), favoriteItem);
+                        }
+                    }
+                }
+            });
+            holder.title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, ""+photoItem.getTitle(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "" + photoItem.getTitle(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -133,6 +175,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         private ImageView photo;
         private TextView title;
         private Button forward;
+        private ToggleButton favorite;
         private final Context context;
 
         public ViewHolder(View itemView) {
@@ -143,6 +186,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             photo = (ImageView) itemView.findViewById(R.id.photo);
             title = (TextView) itemView.findViewById(R.id.photo_title);
             forward = (Button) itemView.findViewById(R.id.forward_btn);
+            favorite = (ToggleButton) itemView.findViewById(R.id.favorite);
         }
 
         public ImageView getPhoto() {

@@ -11,9 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import java.util.ArrayList;
-
 import victorylink.com.flickerapp.Controllers.HttpController;
 import victorylink.com.flickerapp.Interfaces.IView;
 import victorylink.com.flickerapp.Parsers.Photo;
@@ -72,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements IView {
         HttpController resultController = new HttpController(this);
         resultController.doHttpRequest();
     }
+
 
     public void assignResultToUI(Result result) {
 

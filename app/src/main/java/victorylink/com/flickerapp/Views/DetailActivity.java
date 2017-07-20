@@ -24,6 +24,27 @@ public class DetailActivity extends AppCompatActivity implements IView {
 
     private RecyclerView recyclerView;
     private PhotoAdapter mAdapter;
+    private Result responseObject;
+    private String userId;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("userId", userId);
+        outState.putParcelable("result", responseObject);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+
+        responseObject = savedInstanceState.getParcelable("result");
+
+        if (responseObject == null)
+            request(userId);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,16 +52,17 @@ public class DetailActivity extends AppCompatActivity implements IView {
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        String userId = getIntent().getStringExtra("userId");
+        userId = getIntent().getStringExtra("userId");
+
 
         toolbar.setTitle("Photo List");
 
         setSupportActionBar(toolbar);
 
-
         initView();
 
-        request(userId);
+        if (responseObject == null)
+            request(userId);
     }
 
     public void request(String userId) {
@@ -69,8 +91,10 @@ public class DetailActivity extends AppCompatActivity implements IView {
 
     public void assignResultToUI(Result result) {
         //Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_SHORT).show();
+
+        responseObject = result ;
         Log.v("TAG", result.getPhotos().getPhotoList().size() + "");
-        ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
+        ArrayList<Photo> photoArrayList = responseObject.getPhotos().getPhotoList();
 
         if (mAdapter == null) {
             mAdapter = new PhotoAdapter(photoArrayList, this, false);
