@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.Views;
+package victorylink.com.flickerapp.Views.Activity;
 
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -17,6 +17,7 @@ import victorylink.com.flickerapp.Interfaces.IView;
 import victorylink.com.flickerapp.Parsers.Photo;
 import victorylink.com.flickerapp.Parsers.Result;
 import victorylink.com.flickerapp.R;
+import victorylink.com.flickerapp.Views.PhotoAdapter;
 
 public class MainActivity extends AppCompatActivity implements IView {
 

@@ -9,28 +9,26 @@ import victorylink.com.flickerapp.Parsers.Photo;
  */
 
 
-
 public class PhotoRecord implements Serializable {
-    private  String userId ;
-    private String photoId ;
-    private String photoTitle ;
-    private boolean isDownloaded ;
-    private boolean isLiked ;
+    private String userId;
+    private String photoId;
+    private String photoTitle;
+    private boolean isDownloaded;
+    private boolean isLiked;
+
 
     public String getPhotoTitle() {
 
         return photoTitle;
     }
 
-    public static PhotoRecord setFavoritePhoto(Photo photo, String userId)
-    {
+    public static PhotoRecord setPhotoRecord(Photo photo, String userId) {
         PhotoRecord mPhotoRecord = new PhotoRecord();
         mPhotoRecord.setPhotoTitle(photo.getTitle());
-        mPhotoRecord.setLiked(true);
+        mPhotoRecord.setLiked(1);
         mPhotoRecord.setPhotoId(photo.getId());
-        mPhotoRecord.setDownloaded(false);
+        mPhotoRecord.setDownloaded(0);
         mPhotoRecord.setUserId(userId);
-
         return mPhotoRecord;
     }
 
@@ -38,8 +36,8 @@ public class PhotoRecord implements Serializable {
         this.photoTitle = photoTitle;
     }
 
-    public void setDownloaded(boolean downloaded) {
-        isDownloaded = downloaded;
+    public void setDownloaded(Integer downloaded) {
+        isDownloaded = (downloaded == 1);
     }
 
     public boolean isDownloaded() {
@@ -51,8 +49,9 @@ public class PhotoRecord implements Serializable {
         return isLiked;
     }
 
-    public void setLiked(boolean liked) {
-        isLiked = liked;
+    public void setLiked(Integer state) {
+
+        isLiked = (state == 1);
     }
 
     public String getUserId() {

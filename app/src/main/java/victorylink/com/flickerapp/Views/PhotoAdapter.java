@@ -22,12 +22,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import victorylink.com.flickerapp.Models.Constants;
 import victorylink.com.flickerapp.Models.data.PhotoRecord;
-import victorylink.com.flickerapp.Models.data.FavoritePhotosDbHelper;
+import victorylink.com.flickerapp.Models.data.FlickerDbHelper;
 import victorylink.com.flickerapp.Parsers.Photo;
 import victorylink.com.flickerapp.R;
+import victorylink.com.flickerapp.Views.Activity.DetailActivity;
 
 /**
  * Created by MrHacker on 7/17/2017.
@@ -37,7 +39,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     private ArrayList<Photo> dataset;
     private ArrayList<Photo> filteredList;
     private HashMap<String, PhotoRecord> favoriteMap;
-    FavoritePhotosDbHelper database;
+    FlickerDbHelper database;
     private Context context = null;
     private boolean isMain;
 
@@ -46,10 +48,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         filteredList = newDataset;
         context = newContext;
         this.isMain = isMain;
-        database = new FavoritePhotosDbHelper(context);
+        database = new FlickerDbHelper(context);
         favoriteMap = database.getAllFavoritePhotos("Islam");
-        if(favoriteMap==null)
-        {
+        if (favoriteMap == null) {
             favoriteMap = new HashMap<>();
         }
     }
@@ -66,14 +67,16 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Photo photoItem = filteredList.get(position);
 
-        favoriteMap = database.getAllFavoritePhotos("Islam");
-
         if (favoriteMap.containsKey(photoItem.getId())) {
             holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
+            holder.favorite.setChecked(true);
+        } else {
+            holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.off));
+            holder.favorite.setChecked(false);
         }
 
-
         if (!isMain) {
+            printMap(favoriteMap);
             holder.forward.setVisibility(View.GONE);
             holder.favorite.setVisibility(View.VISIBLE);
 
@@ -81,18 +84,19 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
+                        database.deleteFavoritePhoto(photoItem.getId());
                         holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.off));
-                        if (database.checkIsDataAlreadyInDBorNot(photoItem.getId())) {
-                            database.deleteFavoritePhoto(photoItem.getId());
-                            favoriteMap.remove(photoItem.getId());
-                        }
+                        favoriteMap.remove(photoItem.getId());
+                       // holder.favorite.setChecked(false);
                     } else {
-                        PhotoRecord favoriteItem = PhotoRecord.setFavoritePhoto(photoItem, "Islam");
-                        if (database.addFavoritePhoto(favoriteItem)) {
+                        PhotoRecord favoriteItem = PhotoRecord.setPhotoRecord(photoItem, "Islam");
+                        if (database.addPhotoRecordToDB(favoriteItem)) {
                             holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
                             favoriteMap.put(photoItem.getId(), favoriteItem);
+                       //     holder.favorite.setChecked(true);
                         }
                     }
+                    printMap(favoriteMap);
                 }
             });
             holder.title.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +119,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                 context.startActivity(intent);
             }
         });
+    }
+
+    private void printMap(HashMap<String, PhotoRecord> favoriteMap) {
+        for (Map.Entry<String, PhotoRecord> iter : favoriteMap.entrySet()) {
+            Log.v("MAP", "Key = " + iter.getKey());
+        }
     }
 
     public void swapArray(ArrayList<Photo> dataArray) {

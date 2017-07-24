@@ -16,19 +16,19 @@ import static victorylink.com.flickerapp.Models.data.FlickerContract.PhotoEntry.
  * Created by MrHacker on 7/20/2017.
  */
 
-public class FavoritePhotosDbHelper extends SQLiteOpenHelper {
+public class FlickerDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "flickerDb.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
-    public FavoritePhotosDbHelper(Context context) {
+    public FlickerDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        final String SQL_CREATE_FAVORITEPHOTOS_TABLE = "CREATE TABLE " +
+        final String SQL_CREATE_PHOTO_ENTRY_TABLE = "CREATE TABLE " +
                 TABLE_NAME + " (" +
                 FlickerContract.PhotoEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , " +
                 FlickerContract.PhotoEntry.COLUMN_PHOTO_ID + " TEXT NOT NULL , " +
@@ -37,7 +37,7 @@ public class FavoritePhotosDbHelper extends SQLiteOpenHelper {
                 FlickerContract.PhotoEntry.COLUMN_IS_LIKED + " INTEGER NOT NULL , " +
                 FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE + " TEXT NOT NULL " +
                 ");";
-        db.execSQL(SQL_CREATE_FAVORITEPHOTOS_TABLE);
+        db.execSQL(SQL_CREATE_PHOTO_ENTRY_TABLE);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class FavoritePhotosDbHelper extends SQLiteOpenHelper {
 
         values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_ID, newRecord.getPhotoId());
         values.put(FlickerContract.PhotoEntry.COLUMN_USER_ID, newRecord.getUserId());
-        values.put(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED, FlickerContract.isTrueInInteger(newRecord.isDownloaded()));
-        values.put(FlickerContract.PhotoEntry.COLUMN_IS_LIKED, FlickerContract.isTrueInInteger(newRecord.isLiked()));
+        values.put(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED, FlickerContract.booleanInInteger(newRecord.isDownloaded()));
+        values.put(FlickerContract.PhotoEntry.COLUMN_IS_LIKED, FlickerContract.booleanInInteger(newRecord.isLiked()));
         values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE, newRecord.getPhotoTitle());
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -78,8 +78,8 @@ public class FavoritePhotosDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_ID, newRecord.getPhotoId());
         values.put(FlickerContract.PhotoEntry.COLUMN_USER_ID, newRecord.getUserId());
-        values.put(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED, FlickerContract.isTrueInInteger(newRecord.isDownloaded()));
-        values.put(FlickerContract.PhotoEntry.COLUMN_IS_LIKED, FlickerContract.isTrueInInteger(newRecord.isLiked()));
+        values.put(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED, FlickerContract.booleanInInteger(newRecord.isDownloaded()));
+        values.put(FlickerContract.PhotoEntry.COLUMN_IS_LIKED, FlickerContract.booleanInInteger(newRecord.isLiked()));
         values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE, newRecord.getPhotoTitle());
 
         SQLiteDatabase db = getWritableDatabase();
