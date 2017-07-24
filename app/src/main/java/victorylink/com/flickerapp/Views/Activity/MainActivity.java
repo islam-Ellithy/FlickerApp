@@ -1,97 +1,50 @@
 package victorylink.com.flickerapp.Views.Activity;
 
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import java.util.ArrayList;
-import victorylink.com.flickerapp.Controllers.HttpController;
-import victorylink.com.flickerapp.Interfaces.IView;
-import victorylink.com.flickerapp.Parsers.Photo;
-import victorylink.com.flickerapp.Parsers.Result;
+import android.widget.ListView;
+
 import victorylink.com.flickerapp.R;
-import victorylink.com.flickerapp.Views.PhotoAdapter;
+import victorylink.com.flickerapp.Views.Fragment.DetailFragment;
+import victorylink.com.flickerapp.Views.Fragment.MainFragment;
 
-public class MainActivity extends AppCompatActivity implements IView {
-
-    private RecyclerView recyclerView;
-    private PhotoAdapter mAdapter;
-    private Result resultJson ;
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("result",resultJson);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        resultJson = savedInstanceState.getParcelable("result");
-
-        if (resultJson == null) {
-            request();
-        }
-    }
-
+public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
+    private DrawerLayout drawerLayout;
+    private ListView drawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        initView();
-
-        if (resultJson == null) {
-            request();
-        }
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
 
 
-    }
+        MainFragment fragment = MainFragment.newInstance();
 
+        fragment.setListener(this);
 
-    public void initView() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
-
-    public void request() {
-        HttpController resultController = new HttpController(this);
-        resultController.doHttpRequest();
-    }
-
-
-    public void assignResultToUI(Result result) {
-
-        Log.v("TAG", result.getPhotos().getPhotoList().size() + "");
-
-
-        resultJson = result ;
-
-        ArrayList<Photo> photoArrayList = result.getPhotos().getPhotoList();
-
-        if (mAdapter == null) {
-            mAdapter = new PhotoAdapter(photoArrayList, this, true);
-            recyclerView.setAdapter(mAdapter);
-        }
-
-        mAdapter.swapArray(photoArrayList);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame,fragment)
+                //.addToBackStack()
+                .commit();
 
     }
 
+    @Override
+    public void onFragmentInteraction(String userId) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, DetailFragment.newInstance(userId))
+                //.addToBackStack()
+                .commit();
+    }
 
+
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -114,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements IView {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                mAdapter.getFilter().filter(newText);
+       //         mAdapter.getFilter().filter(newText);
                 return true;
             }
         });
@@ -125,10 +78,12 @@ public class MainActivity extends AppCompatActivity implements IView {
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
+/*
     @Override
     public void updateUI(Result Result) {
         assignResultToUI(Result);
     }
+*/
 }

@@ -29,32 +29,12 @@ public class DetailActivity extends AppCompatActivity implements IView {
     private String userId;
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("userId", userId);
-        outState.putParcelable("result", responseObject);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-
-        responseObject = savedInstanceState.getParcelable("result");
-
-        if (responseObject == null)
-            request(userId);
-
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         userId = getIntent().getStringExtra("userId");
-
 
         toolbar.setTitle("Photo List");
 

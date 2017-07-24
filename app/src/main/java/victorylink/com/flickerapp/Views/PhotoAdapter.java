@@ -17,16 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import victorylink.com.flickerapp.Models.Constants;
-import victorylink.com.flickerapp.Models.data.PhotoRecord;
 import victorylink.com.flickerapp.Models.data.FlickerDbHelper;
+import victorylink.com.flickerapp.Models.data.PhotoRecord;
 import victorylink.com.flickerapp.Parsers.Photo;
 import victorylink.com.flickerapp.R;
 import victorylink.com.flickerapp.Views.Activity.DetailActivity;
@@ -87,13 +84,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
                         database.deleteFavoritePhoto(photoItem.getId());
                         holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.off));
                         favoriteMap.remove(photoItem.getId());
-                       // holder.favorite.setChecked(false);
+                        // holder.favorite.setChecked(false);
                     } else {
                         PhotoRecord favoriteItem = PhotoRecord.setPhotoRecord(photoItem, "Islam");
                         if (database.addPhotoRecordToDB(favoriteItem)) {
                             holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
                             favoriteMap.put(photoItem.getId(), favoriteItem);
-                       //     holder.favorite.setChecked(true);
+                            //     holder.favorite.setChecked(true);
                         }
                     }
                     printMap(favoriteMap);
@@ -115,6 +112,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), DetailActivity.class);
                 intent.putExtra("userId", photoItem.getOwner());
+
+
+
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -138,7 +138,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return filteredList.size();
+        if (filteredList != null)
+            return filteredList.size();
+        return 0;
     }
 
 
