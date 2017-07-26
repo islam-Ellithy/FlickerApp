@@ -15,7 +15,16 @@ public class PhotoRecord implements Serializable {
     private String photoTitle;
     private boolean isDownloaded;
     private boolean isLiked;
+    private byte[] image ;
 
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     public String getPhotoTitle() {
 

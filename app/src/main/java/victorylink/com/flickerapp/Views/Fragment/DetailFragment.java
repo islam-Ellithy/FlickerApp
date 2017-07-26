@@ -3,42 +3,36 @@ package victorylink.com.flickerapp.Views.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
 import victorylink.com.flickerapp.Controllers.HttpController;
+import victorylink.com.flickerapp.Interfaces.CommonFragmentInterface;
 import victorylink.com.flickerapp.Interfaces.IView;
 import victorylink.com.flickerapp.Parsers.Photo;
 import victorylink.com.flickerapp.Parsers.Result;
 import victorylink.com.flickerapp.R;
-import victorylink.com.flickerapp.Views.PhotoAdapter;
+import victorylink.com.flickerapp.Views.Adapter.PhotoDetailAdapter;
 
-public class DetailFragment extends Fragment implements IView {
+public class DetailFragment extends Fragment implements IView, CommonFragmentInterface {
 
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
-    private PhotoAdapter mAdapter;
+    private PhotoDetailAdapter mAdapter;
     private Result responseObject;
     private String userId;
 
     public DetailFragment() {
         // Required empty public constructor
     }
-
 
     public static DetailFragment newInstance(String userId) {
         DetailFragment fragment = new DetailFragment();
@@ -51,29 +45,26 @@ public class DetailFragment extends Fragment implements IView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        Bundle args = getArguments();
-
-        userId = args.getString("userId");
-
+        if (getArguments() != null) {
+            Bundle args = getArguments();
+            userId = args.getString("userId");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
         initView(view);
-
 
         if (responseObject == null)
             request(userId);
 
-        return view;
+        return view ;
     }
 
     public void request(String userId) {
@@ -86,6 +77,9 @@ public class DetailFragment extends Fragment implements IView {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) view.findViewById(R.id.searchView);
+        search(searchView);
+
     }
 
 
@@ -102,7 +96,7 @@ public class DetailFragment extends Fragment implements IView {
         ArrayList<Photo> photoArrayList = responseObject.getPhotos().getPhotoList();
 
         if (mAdapter == null) {
-            mAdapter = new PhotoAdapter(photoArrayList, getContext(), false);
+            mAdapter = new PhotoDetailAdapter(photoArrayList , getContext());
             recyclerView.setAdapter(mAdapter);
         }
 
@@ -110,17 +104,8 @@ public class DetailFragment extends Fragment implements IView {
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-        MenuItem search = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
-        search(searchView);
-        super.onCreateOptionsMenu(menu, inflater);
 
-    }
-
-    private void search(SearchView searchView) {
+    public void search(android.support.v7.widget.SearchView searchView) {
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

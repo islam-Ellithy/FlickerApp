@@ -30,6 +30,6 @@ public class FlickerContract  {
         public static final String COLUMN_IS_DOWNLOADED = "isDownloaded";
         public static final String COLUMN_IS_LIKED = "isLiked";
         public static final String COLUMN_PHOTO_TITLE = "photoTitle";
-
+        public static final String COLUMN_IMAGE_DATA = "imageData";
     }
 }
