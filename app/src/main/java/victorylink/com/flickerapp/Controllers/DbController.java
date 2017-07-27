@@ -1,6 +1,6 @@
 package victorylink.com.flickerapp.Controllers;
 
-import victorylink.com.flickerapp.Interfaces.IView;
+import victorylink.com.flickerapp.Other.Interfaces.IView;
 import victorylink.com.flickerapp.Models.DbModel;
 
 /**

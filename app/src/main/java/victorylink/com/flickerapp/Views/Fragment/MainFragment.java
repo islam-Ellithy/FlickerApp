@@ -14,10 +14,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import victorylink.com.flickerapp.Controllers.HttpController;
-import victorylink.com.flickerapp.Interfaces.CommonFragmentInterface;
-import victorylink.com.flickerapp.Interfaces.IView;
-import victorylink.com.flickerapp.Parsers.Photo;
-import victorylink.com.flickerapp.Parsers.Result;
+import victorylink.com.flickerapp.Other.Interfaces.CommonFragmentInterface;
+import victorylink.com.flickerapp.Other.Interfaces.IView;
+import victorylink.com.flickerapp.Other.Parsers.Photo;
+import victorylink.com.flickerapp.Other.Parsers.Result;
 import victorylink.com.flickerapp.R;
 import victorylink.com.flickerapp.Views.Adapter.PhotoAdapter;
 

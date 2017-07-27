@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.Parsers;
+package victorylink.com.flickerapp.Other.Parsers;
 import android.os.Parcel;
 import android.os.Parcelable;
 

@@ -4,8 +4,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import victorylink.com.flickerapp.Controllers.HttpController;
-import victorylink.com.flickerapp.Interfaces.FlickerAPIInterface;
-import victorylink.com.flickerapp.Parsers.Result;
+import victorylink.com.flickerapp.Other.Interfaces.FlickerAPIInterface;
+import victorylink.com.flickerapp.Other.Parsers.Result;
 
 /**
  * Created by MrHacker on 7/17/2017.

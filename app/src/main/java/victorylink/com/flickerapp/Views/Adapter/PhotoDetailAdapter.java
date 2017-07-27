@@ -18,35 +18,38 @@ import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import victorylink.com.flickerapp.Controllers.DownloadController;
 import victorylink.com.flickerapp.Models.Constants;
-import victorylink.com.flickerapp.Models.data.FlickerDbHelper;
-import victorylink.com.flickerapp.Models.data.PhotoRecord;
-import victorylink.com.flickerapp.Parsers.Photo;
+import victorylink.com.flickerapp.Other.Parsers.Photo;
+import victorylink.com.flickerapp.Other.data.FlickerDbHelper;
+import victorylink.com.flickerapp.Other.data.PhotoRecord;
 import victorylink.com.flickerapp.R;
 
 
-public class PhotoDetailAdapter extends RecyclerView.Adapter<victorylink.com.flickerapp.Views.Adapter.PhotoDetailAdapter.ViewHolder> implements Filterable {
+public class PhotoDetailAdapter extends
+        RecyclerView.Adapter<victorylink.com.flickerapp.Views.Adapter.PhotoDetailAdapter.ViewHolder>
+        implements Filterable {
 
     private ArrayList<Photo> dataset;
     private ArrayList<Photo> filteredList;
     private HashMap<String, PhotoRecord> favoriteMap;
-    private HashMap<String, PhotoRecord> downloadMap;
+    private HashMap<String,File> downloadMap;
     Photo photoItem = null ;
     FlickerDbHelper database;
     private Context context = null;
-    private victorylink.com.flickerapp.Views.Adapter.PhotoAdapter.OnAdapterInteractionListener adapterInteractionListener;
 
     public PhotoDetailAdapter(ArrayList<Photo> newDataset, Context newContext) {
         dataset = newDataset;
         filteredList = newDataset;
         context = newContext;
         database = new FlickerDbHelper(context);
-        favoriteMap = database.getAllFavoritePhotos("Islam");
-        downloadMap = database.getAllDownloadedPhotos("Islam");
+        favoriteMap = database.getAllFavoritePhotos("islam");
+       // downloadMap = database.getAllDownloadedPhotos(Profile);
         if (favoriteMap == null) {
             favoriteMap = new HashMap<>();
             downloadMap = new HashMap<>();
@@ -60,6 +63,19 @@ public class PhotoDetailAdapter extends RecyclerView.Adapter<victorylink.com.fli
         return new ViewHolder(v);
     }
 
+    //call the Download controller
+    private void downloadImage(String url,String photoId)
+    {
+        try {
+            DownloadController controller = new DownloadController(context);
+
+            controller.DownloadPngImage(url,photoId);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         photoItem = filteredList.get(position);
@@ -67,7 +83,7 @@ public class PhotoDetailAdapter extends RecyclerView.Adapter<victorylink.com.fli
         Picasso.with(context).load(Constants.getPhotoUrl(photoItem)).into(holder.getPhoto());
         holder.getTitle().setText(photoItem.getTitle());
 
-
+/*
         if (favoriteMap.containsKey(photoItem.getId())) {
             holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
             holder.favorite.setChecked(true);
@@ -80,21 +96,24 @@ public class PhotoDetailAdapter extends RecyclerView.Adapter<victorylink.com.fli
         if (downloadMap.containsKey(photoItem.getId())) {
             holder.download.setChecked(true);
             holder.download.setAlpha(1);
+        }else
+        {
+            holder.download.setChecked(false);
         }
 
         printMap(favoriteMap);
-
+*/
 
         holder.download.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.v("Checked", isChecked + "");
                 if (isChecked) {
-//                    holder.download.setAlpha((float) 0.4);
+                    holder.download.setAlpha(1);
+                    downloadImage(Constants.getPhotoUrl(photoItem),photoItem.getId());
 
                 } else {
-                    holder.download.setAlpha(1);
-                    holder.download.setChecked(true);
+                    holder.download.setAlpha((float) 0.4);
 /*
                     PhotoRecord downloadedItem = PhotoRecord.setPhotoRecord(photoItem, "Islam");
                     downloadedItem.setDownloaded(1);

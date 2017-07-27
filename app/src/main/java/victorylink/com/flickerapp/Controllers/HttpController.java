@@ -1,8 +1,8 @@
 package victorylink.com.flickerapp.Controllers;
 
 import victorylink.com.flickerapp.Models.HttpModel;
-import victorylink.com.flickerapp.Interfaces.IView;
-import victorylink.com.flickerapp.Parsers.Result;
+import victorylink.com.flickerapp.Other.Interfaces.IView;
+import victorylink.com.flickerapp.Other.Parsers.Result;
 
 /**
  * Created by MrHacker on 7/17/2017.

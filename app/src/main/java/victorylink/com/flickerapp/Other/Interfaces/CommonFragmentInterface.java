@@ -1,8 +1,8 @@
-package victorylink.com.flickerapp.Interfaces;
+package victorylink.com.flickerapp.Other.Interfaces;
 
 import android.view.View;
 
-import victorylink.com.flickerapp.Parsers.Result;
+import victorylink.com.flickerapp.Other.Parsers.Result;
 
 /**
  * Created by MrHacker on 7/25/2017.

@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import victorylink.com.flickerapp.Interfaces.CommonFragmentInterface;
-import victorylink.com.flickerapp.Interfaces.DbView;
-import victorylink.com.flickerapp.Parsers.Result;
+import java.util.HashMap;
+
+import victorylink.com.flickerapp.Other.Interfaces.CommonFragmentInterface;
+import victorylink.com.flickerapp.Other.Interfaces.DbView;
+import victorylink.com.flickerapp.Other.data.PhotoRecord;
+import victorylink.com.flickerapp.Other.Parsers.Result;
 import victorylink.com.flickerapp.R;
 import victorylink.com.flickerapp.Views.Adapter.PhotoAdapter;
 
@@ -73,6 +76,10 @@ public class FavoritePhotosFragment extends Fragment implements CommonFragmentIn
 
     }
 
+    @Override
+    public void updateUI(HashMap<String, PhotoRecord> photoRecordHashMap) {
+
+    }
 
 
     public interface OnFragmentInteractionListener {

@@ -1,8 +1,8 @@
-package victorylink.com.flickerapp.data;
+package victorylink.com.flickerapp.Other.data;
 
 import java.io.Serializable;
 
-import victorylink.com.flickerapp.Parsers.Photo;
+import victorylink.com.flickerapp.Other.Parsers.Photo;
 
 /**
  * Created by MrHacker on 7/20/2017.

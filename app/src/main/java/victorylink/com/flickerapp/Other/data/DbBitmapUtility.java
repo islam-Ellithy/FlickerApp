@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.data;
+package victorylink.com.flickerapp.Other.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

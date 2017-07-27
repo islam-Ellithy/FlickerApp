@@ -1,11 +1,11 @@
-package victorylink.com.flickerapp.Interfaces;
+package victorylink.com.flickerapp.Other.Interfaces;
 
-import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by MrHacker on 7/26/2017.
  */
 
 public interface IGallaryView {
-    public void updateUI(File[] images);
+    public void updateUI(ArrayList<String> images);
 }

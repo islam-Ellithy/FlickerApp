@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -15,16 +16,14 @@ import java.net.URL;
 import java.net.URLConnection;
 
 
-
 class DownloadFile extends AsyncTask<String, Integer, Long> {
 
-    ProgressDialog mProgressDialog ;// Change Mainactivity.this with your activity name.
+    ProgressDialog mProgressDialog;// Change Mainactivity.this with your activity name.
     Context context;
 
-    public DownloadFile(Context newContext)
-    {
+    public DownloadFile(Context newContext) {
         mProgressDialog = new ProgressDialog(newContext);
-        context = newContext ;
+        context = newContext;
     }
 
     @Override
@@ -41,20 +40,21 @@ class DownloadFile extends AsyncTask<String, Integer, Long> {
     @Override
     protected Long doInBackground(String... aurl) {
         int count;
-        String downloadFolder = "FlickerImages";
+        final String downloadFolder = "FlickerImages";
         try {
             URL url = new URL((String) aurl[0]);
             URLConnection conexion = url.openConnection();
             conexion.connect();
-            String targetFileName =  aurl[1] + ".png";//Change name and subname
+            String targetFileName = aurl[1] + ".jpg";//Change name and subname
             int lenghtOfFile = conexion.getContentLength();
-            String PATH = Environment.getExternalStorageDirectory() + "/" + downloadFolder + "/";
+            String PATH = Environment.getExternalStorageDirectory() + "/" + downloadFolder;
             File folder = new File(PATH);
             if (!folder.exists()) {
                 folder.mkdir();//If there is no folder it will be created.
+                Log.v("Info", "FOLDER has created");
             }
             InputStream input = new BufferedInputStream(url.openStream());
-            OutputStream output = new FileOutputStream(PATH + targetFileName);
+            OutputStream output = new FileOutputStream(PATH + "/" + targetFileName);
             byte data[] = new byte[1024];
             long total = 0;
             while ((count = input.read(data)) != -1) {
@@ -65,6 +65,9 @@ class DownloadFile extends AsyncTask<String, Integer, Long> {
             output.flush();
             output.close();
             input.close();
+
+//            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+
         } catch (Exception e) {
         }
         return null;
@@ -79,6 +82,5 @@ class DownloadFile extends AsyncTask<String, Integer, Long> {
     }
 
     protected void onPostExecute(String result) {
-
     }
 }

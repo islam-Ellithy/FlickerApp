@@ -5,8 +5,8 @@ import android.content.Context;
 import java.util.Map;
 
 import victorylink.com.flickerapp.Controllers.DbController;
-import victorylink.com.flickerapp.Models.data.FlickerDbHelper;
-import victorylink.com.flickerapp.Models.data.PhotoRecord;
+import victorylink.com.flickerapp.Other.data.FlickerDbHelper;
+import victorylink.com.flickerapp.Other.data.PhotoRecord;
 
 /**
  * Created by MrHacker on 7/26/2017.

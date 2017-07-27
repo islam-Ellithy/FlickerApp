@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import victorylink.com.flickerapp.Controllers.HttpController;
-import victorylink.com.flickerapp.Interfaces.CommonFragmentInterface;
-import victorylink.com.flickerapp.Interfaces.IView;
-import victorylink.com.flickerapp.Parsers.Photo;
-import victorylink.com.flickerapp.Parsers.Result;
+import victorylink.com.flickerapp.Other.Interfaces.CommonFragmentInterface;
+import victorylink.com.flickerapp.Other.Interfaces.IView;
+import victorylink.com.flickerapp.Other.Parsers.Photo;
+import victorylink.com.flickerapp.Other.Parsers.Result;
 import victorylink.com.flickerapp.R;
 import victorylink.com.flickerapp.Views.Adapter.PhotoDetailAdapter;
 
@@ -32,7 +32,9 @@ public class DetailFragment extends Fragment implements IView, CommonFragmentInt
 
     public DetailFragment() {
         // Required empty public constructor
+
     }
+
 
     public static DetailFragment newInstance(String userId) {
         DetailFragment fragment = new DetailFragment();
@@ -64,7 +66,7 @@ public class DetailFragment extends Fragment implements IView, CommonFragmentInt
         if (responseObject == null)
             request(userId);
 
-        return view ;
+        return view;
     }
 
     public void request(String userId) {
@@ -96,7 +98,7 @@ public class DetailFragment extends Fragment implements IView, CommonFragmentInt
         ArrayList<Photo> photoArrayList = responseObject.getPhotos().getPhotoList();
 
         if (mAdapter == null) {
-            mAdapter = new PhotoDetailAdapter(photoArrayList , getContext());
+            mAdapter = new PhotoDetailAdapter(photoArrayList, getContext());
             recyclerView.setAdapter(mAdapter);
         }
 
