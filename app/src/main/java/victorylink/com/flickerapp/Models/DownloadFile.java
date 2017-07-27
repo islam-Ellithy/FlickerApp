@@ -2,6 +2,8 @@ package victorylink.com.flickerapp.Models;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -54,20 +56,38 @@ class DownloadFile extends AsyncTask<String, Integer, Long> {
                 Log.v("Info", "FOLDER has created");
             }
             InputStream input = new BufferedInputStream(url.openStream());
-            OutputStream output = new FileOutputStream(PATH + "/" + targetFileName);
-            byte data[] = new byte[1024];
-            long total = 0;
-            while ((count = input.read(data)) != -1) {
-                total += count;
-                publishProgress((int) (total * 100 / lenghtOfFile));
-                output.write(data, 0, count);
+
+            String fullPath = PATH + "/" + targetFileName;
+
+            File f = new File(fullPath);
+
+
+            if (!f.exists()) {
+                OutputStream output = new FileOutputStream(fullPath);
+
+                byte data[] = new byte[1024];
+                long total = 0;
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    publishProgress((int) (total * 100 / lenghtOfFile));
+                    output.write(data, 0, count);
+                }
+                output.flush();
+                output.close();
+                input.close();
+
+                MediaScannerConnection.scanFile(context, new String[]{fullPath}, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            @Override
+                            public void onScanCompleted(String path, Uri uri) {
+                                Log.i("SCAN", "Scanned " + path);
+                            }
+                        });
+            } else {
+                mProgressDialog.dismiss();
+                Toast.makeText(context, "Image is already exists", Toast.LENGTH_LONG).show();
+                Log.v("IMAGE","Image is already exists");
             }
-            output.flush();
-            output.close();
-            input.close();
-
-//            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-
         } catch (Exception e) {
         }
         return null;
@@ -82,5 +102,6 @@ class DownloadFile extends AsyncTask<String, Integer, Long> {
     }
 
     protected void onPostExecute(String result) {
+
     }
 }

@@ -18,9 +18,10 @@ import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import victorylink.com.flickerapp.Controllers.DownloadController;
@@ -38,21 +39,23 @@ public class PhotoDetailAdapter extends
     private ArrayList<Photo> dataset;
     private ArrayList<Photo> filteredList;
     private HashMap<String, PhotoRecord> favoriteMap;
-    private HashMap<String,File> downloadMap;
+    private List<String> downloadMap;
     Photo photoItem = null ;
     FlickerDbHelper database;
     private Context context = null;
+    private DownloadController controller ;
 
     public PhotoDetailAdapter(ArrayList<Photo> newDataset, Context newContext) {
         dataset = newDataset;
         filteredList = newDataset;
         context = newContext;
         database = new FlickerDbHelper(context);
+        controller = new DownloadController(context);
         favoriteMap = database.getAllFavoritePhotos("islam");
-       // downloadMap = database.getAllDownloadedPhotos(Profile);
+        downloadMap = new ArrayList<>();
+        downloadMap= Arrays.asList(controller.getImagesFromSD());
         if (favoriteMap == null) {
             favoriteMap = new HashMap<>();
-            downloadMap = new HashMap<>();
         }
     }
 
@@ -68,8 +71,8 @@ public class PhotoDetailAdapter extends
     {
         try {
             DownloadController controller = new DownloadController(context);
+            controller.DownloadJpgImage(url,photoId);
 
-            controller.DownloadPngImage(url,photoId);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -83,7 +86,7 @@ public class PhotoDetailAdapter extends
         Picasso.with(context).load(Constants.getPhotoUrl(photoItem)).into(holder.getPhoto());
         holder.getTitle().setText(photoItem.getTitle());
 
-/*
+
         if (favoriteMap.containsKey(photoItem.getId())) {
             holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
             holder.favorite.setChecked(true);
@@ -92,17 +95,17 @@ public class PhotoDetailAdapter extends
         {
             holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.off));
             holder.favorite.setChecked(false);
-        }
-        if (downloadMap.containsKey(photoItem.getId())) {
+        }/*
+        if (downloadMap.get(position).contains(photoItem.getId()+".jpg")) {
             holder.download.setChecked(true);
             holder.download.setAlpha(1);
         }else
         {
             holder.download.setChecked(false);
-        }
+        }*/
 
         printMap(favoriteMap);
-*/
+
 
         holder.download.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -115,14 +118,6 @@ public class PhotoDetailAdapter extends
                 } else {
                     holder.download.setAlpha((float) 0.4);
 /*
-                    PhotoRecord downloadedItem = PhotoRecord.setPhotoRecord(photoItem, "Islam");
-                    downloadedItem.setDownloaded(1);
-                    downloadedItem.setImage(DbBitmapUtility.
-                            getBytes(DownloadModel.getBitmapFromURL(Constants.getPhotoUrl(photoItem))));
-
-                    downloadMap.put(photoItem.getId(), downloadedItem);
-
-                    database.updatePhotoRecord(downloadedItem.getPhotoId(), downloadedItem);
   */
                 }
 
@@ -217,7 +212,7 @@ public class PhotoDetailAdapter extends
         };
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public  class ViewHolder extends RecyclerView.ViewHolder {
         public CardView cardView;
         public ImageView photo;
         public TextView title;

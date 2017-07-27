@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import victorylink.com.flickerapp.Controllers.DownloadController;
 import victorylink.com.flickerapp.Other.Interfaces.IGallaryView;
 import victorylink.com.flickerapp.R;
@@ -24,18 +22,13 @@ import victorylink.com.flickerapp.Views.Adapter.GridViewAdapter;
 
 public class DownloadedPhotosFragment extends Fragment implements IGallaryView {
 
-    private GridView gridView;
-    private GridViewAdapter mAdapter;
     private OnFragmentInteractionListener mListener;
-    private String[] FilePathStrings;
-    private File[] listFile;
+    private String[] filePathStrings;
     GridView grid;
     GridViewAdapter adapter;
-    File file;
     public static Bitmap bmp = null;
     ImageView imageview;
-    DownloadController controller ;
-    ArrayList<String> imagePaths ;
+    DownloadController controller;
 
     public DownloadedPhotosFragment() {
         // Required empty public constructor
@@ -65,20 +58,21 @@ public class DownloadedPhotosFragment extends Fragment implements IGallaryView {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_downloaded_photos, container, false);
-        initView(view);
 
-        controller = new DownloadController(getContext());
-
-        controller.showImagesFromSD();
-
+        downloadedGalary(view);
 
         return view;
     }
 
-    /*
-    void showMedia() {
+    void downloadedGalary(View view) {
+        controller = new DownloadController(getContext());
+        controller.setView(this);
 
-    }*/
+        filePathStrings = controller.getImagesFromSD();
+        initView(view);
+
+        adapter.notifyDataSetChanged();
+    }
 
 
     public void initView(View view) {
@@ -86,20 +80,10 @@ public class DownloadedPhotosFragment extends Fragment implements IGallaryView {
                 Environment.MEDIA_MOUNTED)) {
             Toast.makeText(getContext(), "Error! No SDCARD Found!",
                     Toast.LENGTH_LONG).show();
-        } else {
-            // Locate the image folder in your SD Card
-            file = new File(Environment.getExternalStorageDirectory()
-                    .getPath() + "/FlickerImages");
         }
-        if (file.isDirectory()) {
-            listFile = file.listFiles();
-            FilePathStrings = new String[listFile.length];
-            for (int i = 0; i < listFile.length; i++) {
-                FilePathStrings[i] = listFile[i].getAbsolutePath();
-            }
-        }
+
         grid = (GridView) view.findViewById(R.id.gridview);
-        adapter = new GridViewAdapter(getActivity(), FilePathStrings);
+        adapter = new GridViewAdapter(getActivity(), filePathStrings);
         grid.setAdapter(adapter);
 
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -111,7 +95,7 @@ public class DownloadedPhotosFragment extends Fragment implements IGallaryView {
                 int targetHeight = 500;
                 BitmapFactory.Options bmpOptions = new BitmapFactory.Options();
                 bmpOptions.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(FilePathStrings[position],
+                BitmapFactory.decodeFile(filePathStrings[position],
                         bmpOptions);
                 int currHeight = bmpOptions.outHeight;
                 int currWidth = bmpOptions.outWidth;
@@ -126,20 +110,23 @@ public class DownloadedPhotosFragment extends Fragment implements IGallaryView {
                 }
                 bmpOptions.inSampleSize = sampleSize;
                 bmpOptions.inJustDecodeBounds = false;
-                bmp = BitmapFactory.decodeFile(FilePathStrings[position],
+                bmp = BitmapFactory.decodeFile(filePathStrings[position],
                         bmpOptions);
                 imageview.setImageBitmap(bmp);
                 imageview.setScaleType(ImageView.ScaleType.FIT_XY);
                 bmp = null;
-
             }
         });
 
     }
 
     @Override
-    public void updateUI(ArrayList<String> images) {
+    public void updateUI(String[] images) {
 
+        filePathStrings = new String[images.length];
+        filePathStrings = images;
+
+        Log.v("Files", "sz = " + filePathStrings.length);
 
     }
 

@@ -2,8 +2,6 @@ package victorylink.com.flickerapp.Controllers;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-
 import victorylink.com.flickerapp.Models.DownloadModel;
 import victorylink.com.flickerapp.Other.Interfaces.IGallaryView;
 
@@ -27,12 +25,13 @@ public class DownloadController {
     }
 
 
-    public void DownloadPngImage(String url, String imageId) {
+    public void DownloadJpgImage(String url, String imageId) {
         model.downloadImageFromURL(url, imageId);
     }
 
-    public void showImagesFromSD() {
-        ArrayList<String> paths = model.readImagesFromSD("FlickerImages");
-        view.updateUI(paths);
+    public String[] getImagesFromSD() {
+        String[] paths = model.readImagesFromSD("FlickerImages");
+        //view.updateUI(paths);
+        return paths ;
     }
 }

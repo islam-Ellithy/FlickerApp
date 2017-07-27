@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * Created by MrHacker on 7/26/2017.
@@ -20,14 +19,19 @@ public class DownloadModel {
         downloadFile = new DownloadFile(context);
     }
 
-    public ArrayList<String> readImagesFromSD(String foldername) {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath() + foldername);
-        File[] images = dir.listFiles();
+    public String[] readImagesFromSD(String foldername) {
 
-        ArrayList<String> paths = new ArrayList<>();
+        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/" + foldername);
+        String[] paths = null;
 
-        for (File img : images) {
-            paths.add(img.getAbsolutePath());
+        if (dir.isDirectory()) {
+            File[] images = dir.listFiles();
+
+            paths = new String[images.length];
+
+            for (int i = 0; i < paths.length; i++) {
+                paths[i] = images[i].getAbsolutePath();
+            }
         }
 
         return paths;

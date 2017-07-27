@@ -25,7 +25,10 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return paths.length;
+        if(paths!=null)
+            return paths.length;
+        else
+            return 0 ;
     }
 
     public Object getItem(int position) {

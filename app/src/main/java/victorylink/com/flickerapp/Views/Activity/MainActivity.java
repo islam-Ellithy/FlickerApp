@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity
         username = (TextView) findViewById(R.id.username_nav);
         profilePictureView = (ProfilePictureView) findViewById(R.id.profile_side_menu);
 
-
         askForPermission();
 
         //username.setText(Profile.getCurrentProfile().getName());
