@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.Models.data;
+package victorylink.com.flickerapp.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import static victorylink.com.flickerapp.Models.data.FlickerContract.PhotoEntry.TABLE_NAME;
+import static victorylink.com.flickerapp.data.FlickerContract.PhotoEntry.TABLE_NAME;
 
 /**
  * Created by MrHacker on 7/20/2017.
