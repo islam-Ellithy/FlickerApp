@@ -11,6 +11,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import victorylink.com.flickerapp.R;
 
@@ -24,6 +25,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+
+
         if (isLoggedIn())
             goToMainActivity();
         else
@@ -31,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+
+
 
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -75,9 +86,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-
                 Toast.makeText(getApplicationContext(), "Login attempt failed", Toast.LENGTH_SHORT).show();
-
             }
         });
 

@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.Other.data;
+package victorylink.com.flickerapp.Other.database;
 
 import android.provider.BaseColumns;
 

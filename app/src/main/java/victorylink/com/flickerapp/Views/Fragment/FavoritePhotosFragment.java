@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 import victorylink.com.flickerapp.Other.Interfaces.CommonFragmentInterface;
 import victorylink.com.flickerapp.Other.Interfaces.DbView;
-import victorylink.com.flickerapp.Other.data.PhotoRecord;
+import victorylink.com.flickerapp.Other.database.PhotoRecord;
 import victorylink.com.flickerapp.Other.Parsers.Result;
 import victorylink.com.flickerapp.R;
 import victorylink.com.flickerapp.Views.Adapter.PhotoAdapter;

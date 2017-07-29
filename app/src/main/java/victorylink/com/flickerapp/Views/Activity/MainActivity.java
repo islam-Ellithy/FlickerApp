@@ -61,18 +61,12 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        goToMainFragment();
+
         username = (TextView) findViewById(R.id.username_nav);
         profilePictureView = (ProfilePictureView) findViewById(R.id.profile_side_menu);
 
         askForPermission();
-
-        //username.setText(Profile.getCurrentProfile().getName());
-//        profilePictureView.setProfileId(Profile.getCurrentProfile().getId());
-
-        ///////////////////////////////////////////////
-/*
-  */
-
 
     }
 
@@ -125,37 +119,16 @@ public class MainActivity extends AppCompatActivity
                     Log.i(TAG, "Permission has been granted by user");
 
                 }
-                return ;
+                return;
             }
         }
     }
 
-/*
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStack();
-        } else {
-            showAlert();
-        }
-    }
-*/
 
     protected void makeRequest() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 REQUEST_WRITE_STORAGE);
-    }
-
-    public void getFacebookProfilePicture(String userId) {
-
-        //  ImageView profile = (ImageView) findViewById(R.id.pr);
-
-        String url = "https://graph.facebook.com/469210766772872/picture?type=large";
-
-        //Picasso.with(this).load(url).into(profile);
-
     }
 
 
@@ -170,6 +143,7 @@ public class MainActivity extends AppCompatActivity
                 .addToBackStack(MainFragment.class.getSimpleName())
                 .commit();
     }
+
 
     public void goToFavoritePhotosFragment() {
         getSupportFragmentManager()
@@ -201,9 +175,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-//            showAlert();
         } else {
-            super.onBackPressed();
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack();
+                super.onBackPressed();
+            } else {
+                showAlert();
+            }
+
         }
     }
 
@@ -230,6 +209,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
@@ -245,6 +225,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -278,9 +259,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(String userId) {
 
+        Bundle args = new Bundle();
+
+        args.putString("userId", userId);
+
+        DetailFragment fragment = DetailFragment.newInstance();
+
+        fragment.setArguments(args);
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, DetailFragment.newInstance(userId))
+                .replace(R.id.content_frame, fragment)
                 .addToBackStack(DetailFragment.class.getSimpleName())
                 .commit();
 

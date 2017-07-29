@@ -32,14 +32,18 @@ public class DetailFragment extends Fragment implements IView, CommonFragmentInt
 
     public DetailFragment() {
         // Required empty public constructor
+    }
 
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
     }
 
 
-    public static DetailFragment newInstance(String userId) {
+    public static DetailFragment newInstance() {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
-        args.putString("userId", userId);
+//        args.putString("userId", userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -91,7 +95,6 @@ public class DetailFragment extends Fragment implements IView, CommonFragmentInt
     }
 
     public void assignResultToUI(Result result) {
-        //Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_SHORT).show();
 
         responseObject = result;
         Log.v("TAG", result.getPhotos().getPhotoList().size() + "");

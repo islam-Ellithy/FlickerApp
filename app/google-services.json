@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "409389344687",
+    "firebase_url": "https://flickerapp-c2dde.firebaseio.com",
+    "project_id": "flickerapp-c2dde",
+    "storage_bucket": "flickerapp-c2dde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409389344687:android:2b8ee870a3e5a149",
+        "android_client_info": {
+          "package_name": "victorylink.com.flickerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409389344687-k8b85bqlkt7ghaa4nibafm6hplneauo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "victorylink.com.flickerapp",
+            "certificate_hash": "290b4c09d4d344b94fa302e5caac2ed167921c2c"
+          }
+        },
+        {
+          "client_id": "409389344687-ao1lb6ijdutl06qn6totpl3db5rm5iid.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfM-O4GqFxihMdCUGPj5PEbwN0HUw2fBc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "409389344687-ao1lb6ijdutl06qn6totpl3db5rm5iid.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

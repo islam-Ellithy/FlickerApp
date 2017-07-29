@@ -18,7 +18,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 
-class DownloadFile extends AsyncTask<String, Integer, Long> {
+class DownloadFile extends AsyncTask<String, Integer, Integer> {
 
     ProgressDialog mProgressDialog;// Change Mainactivity.this with your activity name.
     Context context;
@@ -40,8 +40,9 @@ class DownloadFile extends AsyncTask<String, Integer, Long> {
     }
 
     @Override
-    protected Long doInBackground(String... aurl) {
+    protected Integer doInBackground(String... aurl) {
         int count;
+        Integer result = 0;// if 1 mean is downloaded else if 0 isn't
         final String downloadFolder = "FlickerImages";
         try {
             URL url = new URL((String) aurl[0]);
@@ -83,14 +84,16 @@ class DownloadFile extends AsyncTask<String, Integer, Long> {
                                 Log.i("SCAN", "Scanned " + path);
                             }
                         });
+
+                result = 1;
             } else {
                 mProgressDialog.dismiss();
-                Toast.makeText(context, "Image is already exists", Toast.LENGTH_LONG).show();
-                Log.v("IMAGE","Image is already exists");
+                Log.v("IMAGE", "Image is already exists");
+                result = 0;
             }
         } catch (Exception e) {
         }
-        return null;
+        return result;
     }
 
     protected void onProgressUpdate(Integer... progress) {
@@ -101,7 +104,8 @@ class DownloadFile extends AsyncTask<String, Integer, Long> {
         }
     }
 
-    protected void onPostExecute(String result) {
-
+    protected void onPostExecute(Integer result) {
+        if (result == 0)
+            Toast.makeText(context, "Image is already exists", Toast.LENGTH_LONG).show();
     }
 }

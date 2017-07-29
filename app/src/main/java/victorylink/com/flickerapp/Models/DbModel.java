@@ -2,11 +2,10 @@ package victorylink.com.flickerapp.Models;
 
 import android.content.Context;
 
-import java.util.Map;
+import java.util.HashMap;
 
-import victorylink.com.flickerapp.Controllers.DbController;
-import victorylink.com.flickerapp.Other.data.FlickerDbHelper;
-import victorylink.com.flickerapp.Other.data.PhotoRecord;
+import victorylink.com.flickerapp.Other.database.FlickerDbHelper;
+import victorylink.com.flickerapp.Other.database.PhotoRecord;
 
 /**
  * Created by MrHacker on 7/26/2017.
@@ -15,19 +14,17 @@ import victorylink.com.flickerapp.Other.data.PhotoRecord;
 public class DbModel {
 
     FlickerDbHelper db ;
-    DbController controller ;
 
-    public DbModel(DbController newController, Context context)
+    public DbModel(Context context)
     {
         db = new FlickerDbHelper(context);
-        controller = newController ;
     }
-    public Map  getAllDownloadedPhotosFromDb(String userId)
+    public HashMap<String, PhotoRecord> getAllDownloadedPhotosFromDb(String userId)
     {
         return db.getAllDownloadedPhotos(userId);
     }
 
-    public Map getAllFavoritePhotosFromDb(String userId)
+    public HashMap<String, PhotoRecord> getAllFavoritePhotosFromDb(String userId)
     {
         return db.getAllFavoritePhotos(userId);
     }

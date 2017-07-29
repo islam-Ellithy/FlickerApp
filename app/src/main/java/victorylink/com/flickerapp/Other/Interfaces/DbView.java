@@ -2,7 +2,7 @@ package victorylink.com.flickerapp.Other.Interfaces;
 
 import java.util.HashMap;
 
-import victorylink.com.flickerapp.Other.data.PhotoRecord;
+import victorylink.com.flickerapp.Other.database.PhotoRecord;
 
 /**
  * Created by MrHacker on 7/26/2017.

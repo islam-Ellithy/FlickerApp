@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.Other.data;
+package victorylink.com.flickerapp.Other.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import static victorylink.com.flickerapp.Other.data.FlickerContract.PhotoEntry.TABLE_NAME;
+import static victorylink.com.flickerapp.Other.database.FlickerContract.PhotoEntry.TABLE_NAME;
 
 /**
  * Created by MrHacker on 7/20/2017.
@@ -19,7 +19,7 @@ import static victorylink.com.flickerapp.Other.data.FlickerContract.PhotoEntry.T
 public class FlickerDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "flickerDb.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
     public FlickerDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,7 +45,6 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
-
 
 
     public boolean addPhotoRecordToDB(PhotoRecord newRecord) {
@@ -124,12 +123,9 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
     }
 
 
-
-
     public void deleteFavoritePhoto(String photoId) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
-//            Toast.makeText(context,"deleteMovie method",Toast.LENGTH_LONG).show();
 
             if (checkIsDataAlreadyInDBorNot(photoId)) {
                 db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + FlickerContract.PhotoEntry.COLUMN_PHOTO_ID + "=\"" + photoId + "\" ;");
@@ -171,7 +167,6 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
         try {
             c = db.rawQuery(query, null);
 
-            //      Toast.makeText(context,"databaseToString method",Toast.LENGTH_SHORT).show();
             if (c != null) {
                 c.moveToFirst();
 

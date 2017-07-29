@@ -24,11 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import victorylink.com.flickerapp.Controllers.DbController;
 import victorylink.com.flickerapp.Controllers.DownloadController;
 import victorylink.com.flickerapp.Models.Constants;
 import victorylink.com.flickerapp.Other.Parsers.Photo;
-import victorylink.com.flickerapp.Other.data.FlickerDbHelper;
-import victorylink.com.flickerapp.Other.data.PhotoRecord;
+import victorylink.com.flickerapp.Other.database.PhotoRecord;
 import victorylink.com.flickerapp.R;
 
 
@@ -36,26 +36,26 @@ public class PhotoDetailAdapter extends
         RecyclerView.Adapter<victorylink.com.flickerapp.Views.Adapter.PhotoDetailAdapter.ViewHolder>
         implements Filterable {
 
-    private ArrayList<Photo> dataset;
+    private ArrayList<Photo> photoArrayList;
     private ArrayList<Photo> filteredList;
-    private HashMap<String, PhotoRecord> favoriteMap;
+    private HashMap<String, PhotoRecord> favoriteListMap;
     private List<String> downloadMap;
-    Photo photoItem = null ;
-    FlickerDbHelper database;
+    private Photo photoItem = null;
+    private DbController dbController;
     private Context context = null;
-    private DownloadController controller ;
+    private DownloadController controller;
 
-    public PhotoDetailAdapter(ArrayList<Photo> newDataset, Context newContext) {
-        dataset = newDataset;
-        filteredList = newDataset;
+    public PhotoDetailAdapter(ArrayList<Photo> arrayList, Context newContext) {
+        photoArrayList = arrayList;
+        filteredList = arrayList;
         context = newContext;
-        database = new FlickerDbHelper(context);
         controller = new DownloadController(context);
-        favoriteMap = database.getAllFavoritePhotos("islam");
+        dbController = new DbController(context);
+        favoriteListMap = dbController.getAllFavoritePhotosFromDb("islam");
         downloadMap = new ArrayList<>();
-        downloadMap= Arrays.asList(controller.getImagesFromSD());
-        if (favoriteMap == null) {
-            favoriteMap = new HashMap<>();
+        downloadMap = Arrays.asList(controller.getImagesFromSD());
+        if (favoriteListMap == null) {
+            favoriteListMap = new HashMap<>();
         }
     }
 
@@ -67,35 +67,38 @@ public class PhotoDetailAdapter extends
     }
 
     //call the Download controller
-    private void downloadImage(String url,String photoId)
-    {
+    private void downloadImage(String url, String photoId) {
         try {
-            DownloadController controller = new DownloadController(context);
-            controller.DownloadJpgImage(url,photoId);
 
-        }catch (Exception e)
-        {
+            controller.DownloadJpgImage(url, photoId);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        photoItem = filteredList.get(position);
-
-        Picasso.with(context).load(Constants.getPhotoUrl(photoItem)).into(holder.getPhoto());
-        holder.getTitle().setText(photoItem.getTitle());
 
 
-        if (favoriteMap.containsKey(photoItem.getId())) {
+        holder.photoItem = filteredList.get(position);
+
+
+        Picasso.with(context).load(Constants.getPhotoUrl(holder.photoItem)).into(holder.getPhoto());
+
+
+        holder.getTitle().setText(holder.photoItem.getTitle());
+
+
+        if (favoriteListMap.containsKey(holder.photoItem.getId())) {
             holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
             holder.favorite.setChecked(true);
-        }
-        else
-        {
+
+        } else {
             holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.off));
             holder.favorite.setChecked(false);
-        }/*
+        }
+        /*
         if (downloadMap.get(position).contains(photoItem.getId()+".jpg")) {
             holder.download.setChecked(true);
             holder.download.setAlpha(1);
@@ -104,7 +107,7 @@ public class PhotoDetailAdapter extends
             holder.download.setChecked(false);
         }*/
 
-        printMap(favoriteMap);
+        printMap(favoriteListMap);
 
 
         holder.download.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -113,12 +116,12 @@ public class PhotoDetailAdapter extends
                 Log.v("Checked", isChecked + "");
                 if (isChecked) {
                     holder.download.setAlpha(1);
-                    downloadImage(Constants.getPhotoUrl(photoItem),photoItem.getId());
+
+                    downloadImage(Constants.getPhotoUrl(holder.photoItem), holder.photoItem.getId());
 
                 } else {
                     holder.download.setAlpha((float) 0.4);
-/*
-  */
+
                 }
 
             }
@@ -128,21 +131,27 @@ public class PhotoDetailAdapter extends
         holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                //mark an item from recycle view as favorite and insert the record to DB
                 if (isChecked) {
-                    PhotoRecord favoriteItem = PhotoRecord.setPhotoRecord(photoItem, "Islam");
-                    if (database.addPhotoRecordToDB(favoriteItem)) {
-                        holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
-                        favoriteMap.put(photoItem.getId(), favoriteItem);
-                    }
-                } else {
-                    database.deleteFavoritePhoto(photoItem.getId());
+
+                    holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.on));
+                    dbController.insertPhotoToDb(PhotoRecord.setPhotoRecord(holder.photoItem, "islam"));
+                    favoriteListMap = dbController.getAllFavoritePhotosFromDb("islam");
+
+                } //mark an item from recycle view as un favorite and insert the record to DB
+                else {
                     holder.favorite.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.off));
-                    favoriteMap.remove(photoItem.getId());
+                    dbController.deletePhotoFromDb(holder.photoItem.getId());
+                    favoriteListMap = dbController.getAllFavoritePhotosFromDb("islam");
                 }
-                printMap(favoriteMap);
+
+                printMap(favoriteListMap);
             }
         });
-        holder.title.setOnClickListener(new View.OnClickListener() {
+        holder.title.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "" + photoItem.getTitle(), Toast.LENGTH_SHORT).show();
@@ -158,10 +167,10 @@ public class PhotoDetailAdapter extends
     }
 
     public void swapArray(ArrayList<Photo> dataArray) {
-        this.dataset = dataArray;
+        this.photoArrayList = dataArray;
         this.filteredList = dataArray;
 
-        Log.v("TAG", "size on set = " + this.dataset.size() + "");
+        Log.v("TAG", "size on set = " + this.photoArrayList.size() + "");
 
         this.notifyDataSetChanged();
     }
@@ -184,12 +193,12 @@ public class PhotoDetailAdapter extends
 
                 if (charString.isEmpty()) {
 
-                    filteredList = dataset;
+                    filteredList = photoArrayList;
                 } else {
 
                     ArrayList<Photo> mFilteredList = new ArrayList<>();
 
-                    for (Photo item : dataset) {
+                    for (Photo item : photoArrayList) {
 
                         if (item.getTitle().toLowerCase().contains(charString)) {
                             mFilteredList.add(item);
@@ -212,18 +221,19 @@ public class PhotoDetailAdapter extends
         };
     }
 
-    public  class ViewHolder extends RecyclerView.ViewHolder {
-        public CardView cardView;
-        public ImageView photo;
-        public TextView title;
-        public ToggleButton favorite;
-        public ToggleButton download;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
+        ImageView photo;
+        TextView title;
+        Photo photoItem;
+        ToggleButton favorite;
+        ToggleButton download;
 
 
         private final Context context;
 
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             // create a new view
             super(itemView);
             context = itemView.getContext();
