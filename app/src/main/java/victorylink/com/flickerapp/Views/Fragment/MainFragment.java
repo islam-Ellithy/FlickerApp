@@ -26,7 +26,7 @@ public class MainFragment extends Fragment implements IView, PhotoAdapter.OnAdap
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private PhotoAdapter mAdapter;
-    private Result resultJson;
+    private Result jsonResult;
     private ArrayList<Photo> photoArrayList;
 
     public void setListener(OnFragmentInteractionListener mListener) {
@@ -63,7 +63,7 @@ public class MainFragment extends Fragment implements IView, PhotoAdapter.OnAdap
 
         initView(view);
 
-        if (resultJson == null) {
+        if (jsonResult == null) {
             request();
         }
 
@@ -89,7 +89,7 @@ public class MainFragment extends Fragment implements IView, PhotoAdapter.OnAdap
 
     public void assignResultToUI(Result result) {
         Log.v("TAG", result.getPhotos().getPhotoList().size() + "");
-        resultJson = result;
+        jsonResult = result;
         photoArrayList = result.getPhotos().getPhotoList();
 
         if (mAdapter == null) {

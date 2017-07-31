@@ -2,7 +2,9 @@ package victorylink.com.flickerapp.Controllers;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import victorylink.com.flickerapp.Other.Interfaces.IView;
 import victorylink.com.flickerapp.Models.DbModel;
@@ -45,4 +47,12 @@ public class DbController {
         model.updatePhotoFromDb(photoId, record);
     }
 
+    public ArrayList<PhotoRecord> getArrayListFromMap(HashMap<String, PhotoRecord> map) {
+        ArrayList<PhotoRecord> arrayList = new ArrayList<>();
+        for (Map.Entry<String, PhotoRecord> item : map.entrySet()) {
+            arrayList.add(item.getValue());
+        }
+
+        return arrayList;
+    }
 }

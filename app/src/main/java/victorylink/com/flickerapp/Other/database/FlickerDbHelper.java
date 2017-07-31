@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -35,15 +36,51 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
                 FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED + " INTEGER NOT NULL , " +
                 FlickerContract.PhotoEntry.COLUMN_USER_ID + " TEXT NOT NULL , " +
                 FlickerContract.PhotoEntry.COLUMN_IS_LIKED + " INTEGER NOT NULL , " +
-                FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE + " TEXT NOT NULL ); ";
+                FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE + " TEXT NOT NULL ," +
+                FlickerContract.PhotoEntry.COLUMN_PHOTO_URL + " TEXT NOT NULL ); ";
+
+        final String SQL_CREATE_USER_ENTRY_TABLE = "CREATE TABLE " +
+                FlickerContract.UserEntry.TABLE_NAME + " (" +
+                FlickerContract.UserEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , " +
+                FlickerContract.UserEntry.COLUMN_PHOTO_ID + " TEXT NOT NULL , " +
+                FlickerContract.UserEntry.COLUMN_PHOTO_TITLE + " TEXT  , " +
+                FlickerContract.UserEntry.COLUMN_USER_ID + " TEXT NOT NULL , " +
+                FlickerContract.UserEntry.COLUMN_PROFILE_PATH + " TEXT ," +
+                FlickerContract.UserEntry.COLUMN_USERNAME + " BLOB NOT NULL ); ";
 
         db.execSQL(SQL_CREATE_PHOTO_ENTRY_TABLE);
+        db.execSQL(SQL_CREATE_USER_ENTRY_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FlickerContract.UserEntry.TABLE_NAME);
+
         onCreate(db);
+    }
+
+
+    public void addUserEntry(UserRecord record) throws SQLiteException {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(FlickerContract.UserEntry.COLUMN_IMAGE_DATA, record.getImage());
+        cv.put(FlickerContract.UserEntry.COLUMN_PHOTO_ID, record.getPhotoId());
+        cv.put(FlickerContract.UserEntry.COLUMN_PHOTO_TITLE, record.getPhotoTitle());
+        cv.put(FlickerContract.UserEntry.COLUMN_USER_ID, record.getUserId());
+        cv.put(FlickerContract.UserEntry.COLUMN_USERNAME, record.getUsername());
+
+        db.insert(FlickerContract.UserEntry.TABLE_NAME, null, cv);
+    }
+
+    public void UpdatePhotoUserEntry(UserRecord record) throws SQLiteException {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(FlickerContract.UserEntry.COLUMN_IMAGE_DATA, record.getImage());
+
+        db.update(FlickerContract.UserEntry.TABLE_NAME, cv, FlickerContract.UserEntry.COLUMN_USER_ID
+                + "= " + record.getUserId(), null);
+
     }
 
 
@@ -55,6 +92,7 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
         values.put(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED, FlickerContract.booleanInInteger(newRecord.isDownloaded()));
         values.put(FlickerContract.PhotoEntry.COLUMN_IS_LIKED, FlickerContract.booleanInInteger(newRecord.isLiked()));
         values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE, newRecord.getPhotoTitle());
+        values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_URL, newRecord.getPhotoUrl());
 
         SQLiteDatabase db = this.getWritableDatabase();
         long rowId = 0;
@@ -83,6 +121,7 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
         values.put(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED, FlickerContract.booleanInInteger(newRecord.isDownloaded()));
         values.put(FlickerContract.PhotoEntry.COLUMN_IS_LIKED, FlickerContract.booleanInInteger(newRecord.isLiked()));
         values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE, newRecord.getPhotoTitle());
+        values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_URL, newRecord.getPhotoUrl());
 
         SQLiteDatabase db = getWritableDatabase();
 
@@ -106,6 +145,7 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
         values.put(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED, FlickerContract.booleanInInteger(newRecord.isDownloaded()));
         values.put(FlickerContract.PhotoEntry.COLUMN_IS_LIKED, FlickerContract.booleanInInteger(newRecord.isLiked()));
         values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE, newRecord.getPhotoTitle());
+        values.put(FlickerContract.PhotoEntry.COLUMN_PHOTO_URL, newRecord.getPhotoUrl());
 
 
         SQLiteDatabase db = getWritableDatabase();
@@ -174,9 +214,10 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
                     t = new PhotoRecord();
                     t.setPhotoId(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_PHOTO_ID)));
                     t.setUserId(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_USER_ID)));
-                    t.setUserId(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE)));
+                    t.setPhotoTitle(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE)));
                     t.setLiked(c.getInt(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_IS_LIKED)));
                     t.setDownloaded(c.getInt(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED)));
+                    t.setPhotoUrl(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_PHOTO_URL)));
                     favoritelist.put(t.getPhotoId(), t);
                     c.moveToNext();
                 }
@@ -230,9 +271,10 @@ public class FlickerDbHelper extends SQLiteOpenHelper {
                 t = new PhotoRecord();
                 t.setPhotoId(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_PHOTO_ID)));
                 t.setUserId(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_USER_ID)));
-                t.setUserId(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE)));
+                t.setPhotoTitle(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_PHOTO_TITLE)));
                 t.setLiked(c.getInt(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_IS_LIKED)));
                 t.setDownloaded(c.getInt(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_IS_DOWNLOADED)));
+                t.setPhotoUrl(c.getString(c.getColumnIndex(FlickerContract.PhotoEntry.COLUMN_PHOTO_URL)));
 
                 favoritelist.put(t.getPhotoId(), t);
 

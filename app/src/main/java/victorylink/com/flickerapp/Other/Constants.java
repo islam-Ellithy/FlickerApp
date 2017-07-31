@@ -1,4 +1,4 @@
-package victorylink.com.flickerapp.Models;
+package victorylink.com.flickerapp.Other;
 
 import victorylink.com.flickerapp.Other.Parsers.Photo;
 

@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_margin="@dimen/com_facebook_auth_dialog_corner_radius"/>
+            android:layout_margin="@dimen/com_facebook_auth_dialog_corner_radius" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,12 +42,34 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:textSize="16sp"
-        android:text="Change Photo"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/change_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="Change Photo"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="Take photo"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/cameraView"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:src="@drawable/download"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/com_facebook_auth_dialog_corner_radius" />
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package victorylink.com.flickerapp.Other.database;
 
 import java.io.Serializable;
 
+import victorylink.com.flickerapp.Other.Constants;
 import victorylink.com.flickerapp.Other.Parsers.Photo;
 
 /**
@@ -12,11 +13,19 @@ import victorylink.com.flickerapp.Other.Parsers.Photo;
 public class PhotoRecord implements Serializable {
     private String userId;
     private String photoId;
+    private String photoUrl;
     private String photoTitle;
     private boolean isDownloaded;
     private boolean isLiked;
-    private byte[] image ;
+    private byte[] image;
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 
     public byte[] getImage() {
         return image;
@@ -38,8 +47,11 @@ public class PhotoRecord implements Serializable {
         mPhotoRecord.setPhotoId(photo.getId());
         mPhotoRecord.setDownloaded(0);
         mPhotoRecord.setUserId(userId);
+        mPhotoRecord.setPhotoUrl(Constants.getPhotoUrl(photo));
+        
         return mPhotoRecord;
     }
+
 
     public void setPhotoTitle(String photoTitle) {
         this.photoTitle = photoTitle;

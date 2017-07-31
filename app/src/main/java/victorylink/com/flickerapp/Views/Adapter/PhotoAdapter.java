@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import victorylink.com.flickerapp.Models.Constants;
+import victorylink.com.flickerapp.Other.Constants;
 import victorylink.com.flickerapp.Other.database.FlickerDbHelper;
 import victorylink.com.flickerapp.Other.database.PhotoRecord;
 import victorylink.com.flickerapp.Other.Parsers.Photo;

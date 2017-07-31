@@ -3,7 +3,7 @@ package victorylink.com.flickerapp.Other.Interfaces;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import victorylink.com.flickerapp.Models.Constants;
+import victorylink.com.flickerapp.Other.Constants;
 import victorylink.com.flickerapp.Other.Parsers.Result;
 
 /**

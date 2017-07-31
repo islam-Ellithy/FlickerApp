@@ -8,6 +8,7 @@
     <string name="title_activity_detail">DetailActivity</string>
 
 
+    <string name="web_client_id">405954886793-8u77njc764vscbps3008n9repm50pn2m.apps.googleusercontent.com</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="openDrawer">open_drawer</string>

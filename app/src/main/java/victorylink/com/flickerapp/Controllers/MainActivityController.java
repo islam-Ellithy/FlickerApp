@@ -6,7 +6,7 @@ import android.content.Intent;
 import com.facebook.login.LoginManager;
 
 import victorylink.com.flickerapp.R;
-import victorylink.com.flickerapp.Views.Activity.LoginActivity;
+import victorylink.com.flickerapp.Views.Activity.SignInActivity;
 import victorylink.com.flickerapp.Views.Fragment.DownloadedPhotosFragment;
 import victorylink.com.flickerapp.Views.Fragment.FavoritePhotosFragment;
 import victorylink.com.flickerapp.Views.Fragment.MainFragment;
@@ -44,7 +44,7 @@ public class MainActivityController {
             fragmentClass = ProfileFragment.class ;
         } else if (id == R.id.nav_logout) {
             LoginManager.getInstance().logOut();
-            activity.startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            activity.startActivity(new Intent(getApplicationContext(), SignInActivity.class));
             activity.finish();
         }
 

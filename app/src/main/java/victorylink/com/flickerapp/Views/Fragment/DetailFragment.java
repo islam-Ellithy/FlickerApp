@@ -27,8 +27,8 @@ public class DetailFragment extends Fragment implements IView, CommonFragmentInt
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private PhotoDetailAdapter mAdapter;
-    private Result responseObject;
     private String userId;
+    private Result responseObject;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -56,6 +56,7 @@ public class DetailFragment extends Fragment implements IView, CommonFragmentInt
             Bundle args = getArguments();
             userId = args.getString("userId");
         }
+
     }
 
     @Override
@@ -85,7 +86,6 @@ public class DetailFragment extends Fragment implements IView, CommonFragmentInt
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) view.findViewById(R.id.searchView);
         search(searchView);
-
     }
 
 

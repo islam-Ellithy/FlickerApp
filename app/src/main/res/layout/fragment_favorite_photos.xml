@@ -6,11 +6,5 @@
     tools:context="victorylink.com.flickerapp.Views.Fragment.FavoritePhotosFragment"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
     <include layout="@layout/all_layout_recycler_view"/>
 </LinearLayout>

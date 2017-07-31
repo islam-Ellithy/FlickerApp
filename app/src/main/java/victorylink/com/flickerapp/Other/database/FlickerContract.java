@@ -30,6 +30,19 @@ public class FlickerContract  {
         public static final String COLUMN_IS_DOWNLOADED = "isDownloaded";
         public static final String COLUMN_IS_LIKED = "isLiked";
         public static final String COLUMN_PHOTO_TITLE = "photoTitle";
-        public static final String COLUMN_IMAGE_DATA = "imageData";
+        public static final String COLUMN_PHOTO_URL = "imageUrl";
+
     }
+
+    public static class UserEntry implements BaseColumns {
+        public static final String TABLE_NAME = "userEntry";
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_USER_ID = "userId";
+        public static final String COLUMN_PHOTO_ID = "photoId";
+        public static final String COLUMN_PROFILE_PATH = "profilePath";
+        public static final String COLUMN_PHOTO_TITLE = "photoTitle";
+        public static final String COLUMN_IMAGE_DATA = "imageData";
+        public static final String COLUMN_USERNAME = "username";
+    }
+
 }

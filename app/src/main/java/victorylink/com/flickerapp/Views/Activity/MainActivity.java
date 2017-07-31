@@ -21,7 +21,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
-import com.facebook.login.widget.ProfilePictureView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import victorylink.com.flickerapp.R;
 import victorylink.com.flickerapp.Views.Fragment.DetailFragment;
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity
 
     private static String TAG = "PermissionDemo";
     private static final int REQUEST_WRITE_STORAGE = 112;
-    ProfilePictureView profilePictureView;
     TextView username;
 
     @Override
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         goToMainFragment();
 
         username = (TextView) findViewById(R.id.username_nav);
-        profilePictureView = (ProfilePictureView) findViewById(R.id.profile_side_menu);
+
 
         askForPermission();
 
@@ -221,8 +221,22 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
             goToProfileFragment();
         } else if (id == R.id.nav_logout) {
-            LoginManager.getInstance().logOut();
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+
+            FirebaseAuth mAuth;
+            mAuth = FirebaseAuth.getInstance();
+
+            //google
+            FirebaseUser user = mAuth.getCurrentUser();
+
+
+            //sign out from google plus
+            if (user != null)
+                FirebaseAuth.getInstance().signOut();
+            else {
+                //facebook
+                LoginManager.getInstance().logOut();
+            }
+            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
             finish();
         }
 
